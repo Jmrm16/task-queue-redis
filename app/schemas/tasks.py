@@ -1,14 +1,18 @@
-from enum import Enum
-from typing import Dict, Any, Optional
+from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 
-class TaskStatus(str, Enum):
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
 
-class TaskCreate(BaseModel):
-    name: str = Field(..., min_length=1, description="Task identifier")
+class TaskSubmitRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
     payload: Dict[str, Any] = Field(default_factory=dict)
-    priority: int = Field(0, ge=0, le=10)
+    priority: int = Field(default=1, ge=1, le=5)
+
+
+class TaskStatusResponse(BaseModel):
+    id: str
+    name: str
+    status: str
+    created_at: float
+    updated_at: float
+    result: Optional[Any] = None
+    error: Optional[str] = None
